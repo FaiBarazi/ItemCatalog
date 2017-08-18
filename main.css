@@ -3,6 +3,7 @@ body, html{
 	margin:0 auto;
 	padding: 0;
 	width: 90%;
+	height: 100%;
 	font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -14,23 +15,24 @@ h1{
 	height: 1.5em;
 	color: white;
 	text-align: left;
-
-
 }
+
 .login{
 	margin: auto;
 	height: 3em;
 	width: 6em;
-
 }
 
 .navbar{
 	margin: auto;
-	position: fixed;
 	left: 10%;
 	right: 10%;
 	background-color: black;
 	display: inline-flex;
-	width: 90%%;
-	
+	width: 90%;
+}
+header{
+	position: relative;
+	margin-top: 10px;
+	height: 1.5em;
 }
