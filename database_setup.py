@@ -22,6 +22,7 @@ class Movie(Base):
     name = Column(String, nullable=False)
     description = Column(String(250), nullable=False)
     genre_id = Column(Integer, ForeignKey('genre.id'))
+    genre = relationship(Genre)
 
 engine = create_engine('sqlite:///movieGenre.db')
 Base.metadata.create_all(engine)
