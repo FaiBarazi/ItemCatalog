@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, flash, redirect, render_template, \
+     request, url_for
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Genre, Movie
@@ -14,27 +15,26 @@ session = DBSession()
 def mainPage():
     return 'I am the main page'
 
-@app.route('/genre/movies')
+@app.route('/genres/movies')
 def moviePage():
     return 'I am the movies page'
 
-@app.route('/genre/movies/description')
+@app.route('/genres/movies/description',methods=['GET'])
 def movieDescription():
     return 'I am the description'
 
-@app.route('/genre/movies/add')
+@app.route('/genres/movies/add', methods=['GET','POST'])
 def movieAdd():
     return 'I am a movie to add'
 
-@app.route('/genre/movies/edit')
+@app.route('/genres/movies/edit',methods=['GET','PUT'])
 def movieEdit():
     return 'I am a movie to edit'
 
-@app.route('/genre/movies/delete')
+@app.route('/genres/movies/delete',methods=['GET','DELETE'])
 def movieDelete():
     return 'I am a movie to delete'
 
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
-
