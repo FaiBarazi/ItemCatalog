@@ -15,12 +15,13 @@ session = DBSession()
 @app.route('/genres')
 def mainPage():
     genres = session.query(Genre).all()
-
     return render_template('mainPage.html', genres=genres)
 
-@app.route('/genres/movies')
-def moviePage():
-    return 'I am the movies page'
+@app.route('/<int:genre_id>/movies')
+def moviePage(genre_id):
+    genre = session.query(Genre).filter_by(id=genre_id).one()
+    movies = session.query(Movie).filter_by(genre_id=genre_id).all()
+    return render_template('genreMovies.html', movies=movies,genre_name=genre.name)
 
 
 @app.route('/genres/movies/description',methods=['GET'])
