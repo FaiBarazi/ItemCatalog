@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Movie Genre</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='main.css')}}">
+</head>
+
+<body>
+	<div class="navbar">
+		<h1>Main Catalog</h1>
+		<button class="login">Log in</button>	
+	</div>
+	<header>{{genre_name}}</header>
+	<ul>
+		{% for movie in movies %}
+		<li>{{movie.name}}</li>
+		{% endfor %}
+	</ul>
+</body>
