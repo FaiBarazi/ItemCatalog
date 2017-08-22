@@ -12,12 +12,16 @@ session = DBSession()
 
 # Add route to the main page
 @app.route('/')
+@app.route('/genres')
 def mainPage():
-    return 'I am the main page'
+    genres = session.query(Genre).all()
+
+    return render_template('mainPage.html', genres=genres)
 
 @app.route('/genres/movies')
 def moviePage():
     return 'I am the movies page'
+
 
 @app.route('/genres/movies/description',methods=['GET'])
 def movieDescription():
