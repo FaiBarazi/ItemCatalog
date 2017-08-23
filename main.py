@@ -12,21 +12,24 @@ session = DBSession()
 
 # Add route to the main page
 @app.route('/')
-@app.route('/genres')
+@app.route('/genres', methods=['GET'])
 def mainPage():
     genres = session.query(Genre).all()
     return render_template('mainPage.html', genres=genres)
 
-@app.route('/<int:genre_id>/movies')
+@app.route('/<int:genre_id>/movies',methods=['GET'])
 def moviePage(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
-    movies = session.query(Movie).filter_by(genre_id=genre_id).all()
+    movies = session.query(Movie).filter_by(genre_id=genre.id).all()
     return render_template('genreMovies.html', movies=movies,genre_name=genre.name)
 
 
-@app.route('/genres/movies/description',methods=['GET'])
-def movieDescription():
-    return 'I am the description'
+@app.route('/<int:movie_id>/description',methods=['GET'])
+def movieDescription(movie_id):
+    movie = session.query(Movie).filter_by(id=movie_id).one()
+    return render_template('movieDescription.html', movie_name=movie.name, 
+                            description=movie.description)
+
 
 @app.route('/genres/movies/add', methods=['GET','POST'])
 def movieAdd():
