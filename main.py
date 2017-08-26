@@ -2,7 +2,7 @@ from flask import Flask, flash, redirect, render_template, \
      request, url_for
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Genre, Movie
+from database_setup import Base, Genre, Movie, User
 #Imports for Varification and Authentication
 from flask import session as login_session
 import random, string
@@ -26,6 +26,7 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "ItemCatalog"
 
+######## Start User Login/logout ########
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)for x in range(32))
@@ -117,6 +118,29 @@ def gconnect():
     print ("done!")
     return output
 
+# Creating a new user
+def createUser(login_session):
+    newUser = User(name=login_session['username'],
+                   email=login_session['email'],
+                   picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserId(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
 #disconnect from google
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -148,6 +172,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+######## End of User Login/Logout ########
 
 # Add route to the main page
 @app.route('/')
@@ -181,6 +206,8 @@ def movieEdit():
 @app.route('/genres/movies/delete',methods=['GET','DELETE'])
 def movieDelete():
     return 'I am a movie to delete'
+
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
