@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Genre</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='main.css')}}">
+</head>
+<body>
+    <div class="navbar">
+        <h1>Main Catalog</h1>
+        {% if 'username' not in session %}
+        <div class="logButton">
+        <a class='logLink' href="{{url_for('showLogin')}}">Login</a>
+        </div>
+        {% else %}
+        <div class="LogButton">
+          <a class='logLink' href="{{url_for('gdisconnect')}}">Logout</a>
+        </div>
+      {% endif %}
+      
+     </div>
+     {% block content %}
+     {% endblock %}
+
+
+</body>

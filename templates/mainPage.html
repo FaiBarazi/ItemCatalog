@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Movie Genre</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='main.css')}}">
-</head>
-<body>
-	<div class="navbar">
-		<h1>Main Catalog</h1>
-		<button class="login">Log in</button>	
+{% extends "navigation.html" %}
+    {% block content %}
+    <div class="mainBody">
+    <h2>Movie Categories</h2>
+		
+		<ul>
+			{% for genre in genres %}
+			<li><a href="{{url_for('moviePage',genre_id=genre.id)}}">{{genre.name}}</a></li>
+			{% endfor %}
+		</ul>
+		
 	</div>
-	<header>Movies Genre</header>
 	
-	{% for genre in genres %}
-	<p><a href="{{url_for('moviePage',genre_id=genre.id)}}">{{genre.name}}</a></p>
-	{% endfor %}
+	{% endblock %}
 	
 
-
-</body>
-</html>
