@@ -1,0 +1,14 @@
+{% extends "navigation.html" %}
+    {% block content %}
+	<div class="mainBody">
+	
+	<h2>{{genre_name}} Movies</h2>
+	<ul>
+		{% for movie in movies %}
+		<li>{{movie.name}}</li>
+		{% endfor %}
+	</ul>
+	<a href="{{url_for('newMovie',genre_id=genre_id)}}">Add Movie</a>
+	</div>
+	{% endblock %}
+

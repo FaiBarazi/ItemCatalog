@@ -180,13 +180,13 @@ def gdisconnect():
 ######## End of User Login/Logout ########
 
 # Add route to the main page
-@app.route('/')
-@app.route('/genres', methods=['GET'])
+@app.route('/',methods=['GET'])
+@app.route('/genre', methods=['GET'])
 def homePage():
     genres = session.query(Genre).all()
     return render_template('homePage.html', genres=genres)
 
-@app.route('/genres/new', methods=['GET', 'POST'])
+@app.route('/genre/new', methods=['GET', 'POST'])
 def newGenre():
     if 'username' not in login_session:
         return redirect('/login')
@@ -198,23 +198,34 @@ def newGenre():
     else:
         return render_template('newGenre.html')
 
-@app.route('/<int:genre_id>/movies',methods=['GET'])
-def moviePage(genre_id):
+@app.route('/genre/<int:genre_id>/movies',methods=['GET'])
+def showMovies(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
     movies = session.query(Movie).filter_by(genre_id=genre.id).all()
-    return render_template('genreMovies.html', movies=movies,genre_name=genre.name)
+    return render_template('showMovies.html',genre_id=genre_id, genre_name=genre.name, movies=movies)
 
-
-@app.route('/<int:movie_id>/description',methods=['GET'])
+@app.route('/genre/<int:genre_id>/new', methods=['GET','POST'])
+def newMovie(genre_id):
+    genre = session.query(Genre).filter_by(id=genre_id).one()
+    if 'username' not in login_session:
+        return redirect('/login')
+    if request.method == 'POST':
+        newmovie = Movie(name=request.form['name'],description=request.form['description'],
+            user_id=login_session['user_id'], genre_id=genre_id)
+        session.add(newmovie)
+        session.commit()
+        return(redirect(url_for('showMovies',genre_id=genre_id)))
+    else:
+        return render_template('newMovie.html',genre_id=genre_id, genre_name=genre.name)
+'''
+@app.route('/<int:movie_id>/description',methods=['GET','POST'])
 def movieDescription(movie_id):
     movie = session.query(Movie).filter_by(id=movie_id).one()
     return render_template('movieDescription.html', movie_name=movie.name, 
                             description=movie.description)
 
 
-@app.route('/genres/movies/add', methods=['GET','POST'])
-def movieAdd():
-    return 'I am a movie to add'
+
 
 @app.route('/genres/movies/edit',methods=['GET','PUT'])
 def movieEdit():
@@ -224,7 +235,7 @@ def movieEdit():
 def movieDelete():
     return 'I am a movie to delete'
 
-
+'''
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'

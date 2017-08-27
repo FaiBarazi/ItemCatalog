@@ -1,0 +1,14 @@
+{% extends "navigation.html" %}
+    {% block content %}
+    <div class="mainBody">
+    	<h2>Add a New Movie To {{genre_name}}</h2>
+		<form action="{{url_for('newMovie',genre_id=genre_id)}}" method="post">
+			<h3>Movie Name</h3>
+			<input type="text" size="30" name="name">
+			<h3>Movie Description</h3>
+			<input type="text"	size="30" name="description">
+			<input type="submit" value="Create">	
+		</form>			
+	</div>
+	
+	{% endblock %}
