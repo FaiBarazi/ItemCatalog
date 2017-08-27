@@ -10,10 +10,11 @@ Base = declarative_base()
 # Create User Table
 class User(Base): 
   __tablename__ = 'user'
+  id = Column(Integer, primary_key = True)
   name = Column(String(250), nullable = False)
   email = Column(String(250), nullable = False)
   picture = Column(String(250))
-  id = Column(Integer, primary_key = True)
+ 
 
 # Create movie Genre SQL Table
 class Genre(Base):

@@ -106,6 +106,11 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    #Create User if it doesn't Exist
+    user_id = getUserId(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '
@@ -114,7 +119,7 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
+    flash("you are now logged in as {}".format(login_session['username']))
     print ("done!")
     return output
 
@@ -153,7 +158,7 @@ def gdisconnect():
     print ('In gdisconnect access token is %s', access_token)
     print ('User name is: ')
     print (login_session['username'])
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(login_session['access_token'])
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print ('result is ')
@@ -177,9 +182,21 @@ def gdisconnect():
 # Add route to the main page
 @app.route('/')
 @app.route('/genres', methods=['GET'])
-def mainPage():
+def homePage():
     genres = session.query(Genre).all()
-    return render_template('mainPage.html', genres=genres)
+    return render_template('homePage.html', genres=genres)
+
+@app.route('/genres/new', methods=['GET', 'POST'])
+def newGenre():
+    if 'username' not in login_session:
+        return redirect('/login')
+    if request.method == 'POST':
+        newgenre = Genre(name=request.form['name'], user_id=login_session['user_id'])
+        session.add(newgenre)
+        session.commit()
+        return redirect(url_for('homePage'))
+    else:
+        return render_template('newGenre.html')
 
 @app.route('/<int:genre_id>/movies',methods=['GET'])
 def moviePage(genre_id):

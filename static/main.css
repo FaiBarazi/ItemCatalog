@@ -50,7 +50,10 @@ header{
 .mainBody{
 	margin-left: 20em
 }
+ul{
+	list-style: none;
 
+}
 h2{
 
 }
