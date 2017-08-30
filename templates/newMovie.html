@@ -8,7 +8,8 @@
 			<h3>Movie Description</h3>
 			<textarea type="text"	size="30" name="description"></textarea>
 			<input type="submit" value="Create">	
-		</form>			
+		</form>	
+		<a href="{{url_for('showMovies', genre_id=genre_id)}}">Cancel</a>		
 	</div>
 	
 	{% endblock %}
