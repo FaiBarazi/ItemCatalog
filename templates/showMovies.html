@@ -2,10 +2,10 @@
     {% block content %}
 	<div class="mainBody">
 	
-	<h2>{{genre_name}} Movies</h2>
+	<h2>{{genre.name}} Movies</h2>
 	<ul>
 		{% for movie in movies %}
-		<li>{{movie.name}}</li>
+		<li><a href="{{url_for('movieDescription', genre_id=genre_id,movie_id=movie.id, movie=movie)}}">{{movie.name}}</a></li>
 		{% endfor %}
 	</ul>
 	<a href="{{url_for('newMovie',genre_id=genre_id)}}">Add Movie</a>

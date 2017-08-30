@@ -5,7 +5,7 @@
 		
 		<ul>
 			{% for genre in genres %}
-			<li><a href="{{url_for('moviePage',genre_id=genre.id)}}">{{genre.name}}</a></li>
+			<li><a href="{{url_for('showMovies',genre_id=genre.id)}}">{{genre.name}}</a></li>
 			{% endfor %}
 		</ul>
 		<a href="{{url_for('newGenre')}}">New Genre</a>
