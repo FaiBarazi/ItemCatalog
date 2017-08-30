@@ -225,14 +225,14 @@ def movieDescription(genre_id, movie_id):
     return render_template('movieDescription.html',genre_id=genre_id,movie_id=movie_id, movie=movie)
 
 #Edit Movie Route
-@app.route('/genre/<int:genre_id>/<int:movie_id>/movie/edit',methods=['GET','PUT'])
+@app.route('/genre/<int:genre_id>/<int:movie_id>/movie/edit',methods=['GET','POST'])
 def movieEdit(genre_id, movie_id):
     if 'username' not in login_session:
         return redirect('/login')
     movie = session.query(Movie).filter_by(id=movie_id).one()
     genre = session.query(Genre).filter_by(id=genre_id).one()
     if movie.user_id != login_session['user_id']:
-        return "You are not authorized to edit this item."
+        return 'You have no authorization to edit this movie.'
     if request.method == 'POST':
         if request.form['name']:
             movie.name = request.form['name']
@@ -240,7 +240,7 @@ def movieEdit(genre_id, movie_id):
             movie.description = request.form['description']
         session.add(movie)
         session.commit()
-        return redirect(url_for('showMovie', genre_id=genre_id))
+        return redirect(url_for('showMovies', genre_id=genre_id))
     else:
         return render_template('editMovie.html', genre_id=genre_id,
                                movie_id=movie_id, m=movie)
@@ -254,7 +254,7 @@ def movieDelete(genre_id, movie_id):
     movie = session.query(Movie).filter_by(id=movie_id).one()
     genre = session.query(Genre).filter_by(id=genre_id).one()
     if movie.user_id != login_session['user_id']:
-        return 'You are not authorized to delete this item.'
+        return 'You have no authorization to delete this movie.'
     if request.method == 'POST':
         session.delete(movie)
         session.commit()
