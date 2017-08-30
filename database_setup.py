@@ -18,11 +18,19 @@ class User(Base):
 
 # Create movie Genre SQL Table
 class Genre(Base):
+  
     __tablename__ = 'genre'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
+
+    @property #  Return Jasonifiable object 
+    def serialize(self):
+      return {
+          'name': self.name,
+          'id': self.id,
+      }
 
 # Create movies SQL Table
 class Movie(Base):
@@ -35,14 +43,13 @@ class Movie(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
-#Returns object data in easily serializable format   
-@property
-def serialize(self):
-    return {
-        'name': self.name,
-        'description': self.description,
-        'id': self.id,
-    }
+    @property #  Return Jasonifiable object 
+    def serialize(self):
+      return {
+          'name': self.name,
+          'description': self.description,
+          'id': self.id,
+      }
 engine = create_engine('sqlite:///movieGenre.db')
 Base.metadata.create_all(engine)
 

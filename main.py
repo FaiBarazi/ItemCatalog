@@ -1,16 +1,16 @@
 from flask import Flask, flash, redirect, render_template, \
-     request, url_for
+     request, url_for,jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Genre, Movie, User
 #Imports for Varification and Authentication
 from flask import session as login_session
 import random, string
+import json
 # Handle Authentication
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
-import json
 from flask import make_response
 import requests
 
@@ -178,6 +178,19 @@ def gdisconnect():
         return response
 
 ######## End of User Login/Logout ########
+
+######## Jason Routing ########
+@app.route('/genre/<int:genre_id>/movies/JSON')
+def moviesListJSON(genre_id):
+    genre = session.query(Genre).filter_by(id=genre_id).one()
+    movies = session.query(Movie).filter_by(genre_id=genre_id).all()
+    return jsonify(Items=[i.serialize for i in movies])
+
+@app.route('/genre/<int:genre_id>/<int:movie_id>/JSON')
+def movieJSON(genre_id, movie_id):
+    movie = session.query(Movie).filter_by(id=movie_id).one()
+    return jsonify(movie.serialize)
+######## End Jason Routing ########
 
 # Add route to the main page
 @app.route('/',methods=['GET'])
