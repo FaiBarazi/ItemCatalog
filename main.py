@@ -185,19 +185,7 @@ def gdisconnect():
 def homePage():
     genres = session.query(Genre).all()
     return render_template('homePage.html', genres=genres)
-
-@app.route('/genre/new', methods=['GET', 'POST'])
-def newGenre():
-    if 'username' not in login_session:
-        return redirect('/login')
-    if request.method == 'POST':
-        newgenre = Genre(name=request.form['name'], user_id=login_session['user_id'])
-        session.add(newgenre)
-        session.commit()
-        return redirect(url_for('homePage'))
-    else:
-        return render_template('newGenre.html')
-
+    
 @app.route('/genre/<int:genre_id>/movies',methods=['GET'])
 def showMovies(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
