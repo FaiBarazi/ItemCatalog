@@ -2,7 +2,7 @@
     {% block content %}
     <div class="mainBody">
     	<h2>Edit Movie {{m.name}}</h2>
-		<form action="{{url_for('movieEdit', genre_id=genre_id, movie_id=movie_id)}}" method="POST">
+		<form action="{{url_for('movieEdit', genre_id=genre_id, movie_id=movie_id)}}" method="post">
 			<h3>Movie Name</h3>
 			<input type="text" size="30" name="name" placeholder="{{m.name}}">
 			<h3>Movie Description</h3>
