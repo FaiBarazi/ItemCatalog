@@ -8,4 +8,5 @@
 	<a href="{{url_for('movieEdit', genre_id=genre_id,movie_id=movie_id)}}">Edit Movie</a>
 	<a href="{{url_for('movieDelete', genre_id=genre_id, movie_id=movie_id)}}">Delete Movie</a>
 	</div>
+	<a class='navLinks' href="{{url_for('showMovies',genre_id=genre_id)}}">Back</a>
 	{% endblock %}
