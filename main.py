@@ -1,11 +1,12 @@
 from flask import Flask, flash, redirect, render_template, \
-     request, url_for,jsonify
+    request, url_for, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Genre, Movie, User
-#Imports for Varification and Authentication
+# Imports for Varification and Authentication
 from flask import session as login_session
-import random, string
+import random
+import string
 import json
 # Handle Authentication
 from oauth2client.client import flow_from_clientsecrets
@@ -15,7 +16,7 @@ from flask import make_response
 import requests
 
 app = Flask(__name__)
-#Connect to database
+# Connect to database
 engine = create_engine('sqlite:///movieGenre.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
@@ -26,12 +27,16 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "ItemCatalog"
 
-######## Start User Login/logout ########
+# User login/logout setup
+
+
 @app.route('/login')
 def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)for x in range(32))
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in range(32))
     login_session['state'] = state
-    return render_template('login.html',STATE=state)
+    return render_template('login.html', STATE=state)
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -80,14 +85,14 @@ def gconnect():
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
-        print ("Token's client ID does not match app's.")
+        print("Token's client ID does not match app's.")
         response.headers['Content-Type'] = 'application/json'
         return response
 
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
+        response = make_response(json.dumps('Current user already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -106,7 +111,7 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-    #Create User if it doesn't Exist
+    # Create User if it doesn't Exist
     user_id = getUserId(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
@@ -120,10 +125,12 @@ def gconnect():
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as {}".format(login_session['username']))
-    print ("done!")
+    print("done!")
     return output
 
 # Creating a new user
+
+
 def createUser(login_session):
     newUser = User(name=login_session['username'],
                    email=login_session['email'],
@@ -146,23 +153,27 @@ def getUserId(email):
     except:
         return None
 
-#disconnect from google
+# disconnect from google
+
+
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
-        print ('Access Token is None')
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        print('Access Token is None')
+        response = make_response(json.dumps(
+            'Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    print ('In gdisconnect access token is %s', access_token)
-    print ('User name is: ')
-    print (login_session['username'])
-    url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(login_session['access_token'])
+    print('In gdisconnect access token is %s', access_token)
+    print('User name is: ')
+    print(login_session['username'])
+    url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(
+        login_session['access_token'])
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print ('result is ')
-    print (result)
+    print('result is ')
+    print(result)
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
@@ -173,60 +184,75 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps(
+            'Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
-######## End of User Login/Logout ########
+# Jason Routing
 
-######## Jason Routing ########
+
 @app.route('/genre/<int:genre_id>/movies/JSON')
 def moviesListJSON(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
     movies = session.query(Movie).filter_by(genre_id=genre_id).all()
     return jsonify(Items=[i.serialize for i in movies])
 
+
 @app.route('/genre/<int:genre_id>/<int:movie_id>/JSON')
 def movieJSON(genre_id, movie_id):
     movie = session.query(Movie).filter_by(id=movie_id).one()
     return jsonify(movie.serialize)
-######## End Jason Routing ########
 
 # Add route to the main page
-@app.route('/',methods=['GET'])
+
+
+@app.route('/', methods=['GET'])
 @app.route('/genre', methods=['GET'])
 def homePage():
     genres = session.query(Genre).all()
     return render_template('homePage.html', genres=genres)
-    
-@app.route('/genre/<int:genre_id>/movies',methods=['GET'])
+
+
+@app.route('/genre/<int:genre_id>/movies', methods=['GET'])
 def showMovies(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
     movies = session.query(Movie).filter_by(genre_id=genre.id).all()
-    return render_template('showMovies.html',genre_id=genre_id, genre=genre, movies=movies)
+    return render_template('showMovies.html',
+                           genre_id=genre_id, genre=genre, movies=movies)
 
-#Add a new movie route
-@app.route('/genre/<int:genre_id>/new', methods=['GET','POST'])
+# Add a new movie route
+
+
+@app.route('/genre/<int:genre_id>/new', methods=['GET', 'POST'])
 def newMovie(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newmovie = Movie(name=request.form['name'],description=request.form['description'],
-            user_id=login_session['user_id'], genre_id=genre_id)
+        newmovie = Movie(name=request.form['name'],
+                         description=request.form['description'],
+                         user_id=login_session['user_id'], genre_id=genre_id)
         session.add(newmovie)
         session.commit()
-        return(redirect(url_for('showMovies',genre_id=genre_id)))
+        return(redirect(url_for('showMovies', genre_id=genre_id)))
     else:
-        return render_template('newMovie.html',genre_id=genre_id, genre_name=genre.name)
+        return render_template('newMovie.html', genre_id=genre_id,
+                               genre_name=genre.name)
 
-@app.route('/genre/<int:genre_id>/<int:movie_id>/description',methods=['GET','POST'])
+
+@app.route('/genre/<int:genre_id>/<int:movie_id>/description',
+           methods=['GET', 'POST'])
 def movieDescription(genre_id, movie_id):
     movie = session.query(Movie).filter_by(id=movie_id).one()
-    return render_template('movieDescription.html',genre_id=genre_id,movie_id=movie_id, movie=movie)
+    return render_template('movieDescription.html', genre_id=genre_id,
+                           movie_id=movie_id, movie=movie)
 
-#Edit Movie Route
-@app.route('/genre/<int:genre_id>/<int:movie_id>/movie/edit',methods=['GET','POST'])
+# Edit Movie Route
+
+
+@app.route('/genre/<int:genre_id>/<int:movie_id>/movie/edit',
+           methods=['GET', 'POST'])
 def movieEdit(genre_id, movie_id):
     if 'username' not in login_session:
         return redirect('/login')
@@ -247,6 +273,8 @@ def movieEdit(genre_id, movie_id):
                                movie_id=movie_id, m=movie)
 
 # Delete Movie Route
+
+
 @app.route('/genre/<int:genre_id>/<int:movie_id>/delete',
            methods=['GET', 'POST'])
 def movieDelete(genre_id, movie_id):
@@ -263,7 +291,6 @@ def movieDelete(genre_id, movie_id):
     else:
         return render_template('deleteMovie.html', genre_id=genre_id,
                                movie_id=movie_id, movie=movie)
-
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
