@@ -10,7 +10,7 @@ DBSession = sessionmaker(bind=engine)
 
 session = DBSession()
 
-#Horror movies
+# Horror movies
 horror = Genre(name='Horror')
 session.add(horror)
 session.commit()
@@ -23,17 +23,17 @@ movieItem2 = Movie(name='Raw', description='''The life of a stringent vegetarian
 session.add(movieItem2)
 session.commit()
 
-#Romance Movies
+# Romance Movies
 romance = Genre(name='Romance')
 session.add(romance)
 session.commit()
 
-movieItem1 = Movie(name='The Big Sick',description='''The film tells the story of Pakistan-born aspiring comedian who connects with grad student after one of his standup sets.However, what they thought would be just a one-night stand blossoms into the real thing, which complicates things epsicially with his traditional Muslim parents''',
+movieItem1 = Movie(name='The Big Sick', description='''The film tells the story of Pakistan-born aspiring comedian who connects with grad student after one of his standup sets.However, what they thought would be just a one-night stand blossoms into the real thing, which complicates things epsicially with his traditional Muslim parents''',
                    genre=romance)
 session.add(movieItem1)
 session.commit()
 
-movieItem2 = Movie(name='Paris Pieds Nus',description='''Fiona, a Canadian librarian leaves to Paris to help her aging grand mother. However, she loses her way and her grand mother gets lost. The search begins in Paris with her new-friend Dom, a homeless man in Paris who is attracted to Fiona.''', 
+movieItem2 = Movie(name='Paris Pieds Nus', description='''Fiona, a Canadian librarian leaves to Paris to help her aging grand mother. However, she loses her way and her grand mother gets lost. The search begins in Paris with her new-friend Dom, a homeless man in Paris who is attracted to Fiona.''',
                    genre=romance)
 session.add(movieItem2)
 session.commit()
