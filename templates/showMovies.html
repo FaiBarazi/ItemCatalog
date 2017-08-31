@@ -1,15 +1,15 @@
 {% extends "navigation.html" %}
-    {% block content %}
-	<div class="mainBody">
-	
-	<h2>{{genre.name}} Movies</h2>
-	<ul>
-		{% for movie in movies %}
-		<li><a href="{{url_for('movieDescription', genre_id=genre_id,movie_id=movie.id, movie=movie)}}">{{movie.name}}</a></li>
-		{% endfor %}
-	</ul>
-	<a href="{{url_for('newMovie',genre_id=genre_id)}}">Add Movie</a>
-	<a href="{{url_for('homePage')}}">Back</a>
-	</div>
-	{% endblock %}
+
+{% block content %}	
+<h2>{{genre.name}} Movies</h2>
+<ul>
+	{% for movie in movies %}
+	<li><a class="list" href="{{url_for('movieDescription', genre_id=genre_id,movie_id=movie.id, movie=movie)}}">{{movie.name}}</a></li>
+	{% endfor %}
+</ul>
+<div class="buttonContainer">
+	<a class="button" href="{{url_for('newMovie',genre_id=genre_id)}}">Add Movie</a>
+	<a class="button" href="{{url_for('homePage')}}">Back</a>
+</div>
+{% endblock %}
 

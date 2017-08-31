@@ -1,15 +1,13 @@
 {% extends "navigation.html" %}
-    {% block content %}
-    <div class="mainBody">
-    	<h2>Add a New Movie To {{genre_name}}</h2>
-		<form action="{{url_for('newMovie',genre_id=genre_id)}}" method="post">
-			<h3>Movie Name</h3>
-			<input type="text" size="30" name="name">
-			<h3>Movie Description</h3>
-			<textarea type="text" name="description"></textarea>
-			<input type="submit" value="Create">	
-		</form>	
-		<a href="{{url_for('showMovies', genre_id=genre_id)}}">Cancel</a>		
-	</div>
-	
-	{% endblock %}
+
+{% block content %}
+<h2>Add a New Movie To {{genre_name}}</h2>
+<form action="{{url_for('newMovie',genre_id=genre_id)}}" method="post">
+	<h3>Movie Name</h3>
+	<input type="text" size="30" name="name">
+	<h3>Movie Description</h3>
+	<textarea type="text" name="description"></textarea>
+	<input type="submit" value="Create">	
+</form>	
+<a class="button" href="{{url_for('showMovies', genre_id=genre_id)}}">Cancel</a>		
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends "navigation.html" %}
-    {% block content %}
-    <div class="mainBody">
+
+{% block content %}
     	<h2>Edit Movie {{m.name}}</h2>
 		<form action="{{url_for('movieEdit', genre_id=genre_id, movie_id=movie_id)}}" method="post">
 			<h3>Movie Name</h3>
@@ -9,7 +9,7 @@
 			<textarea type="text" name="description" placeholder="{{m.description}}"></textarea> 
 			<input type="submit" value="Edit">
 		</form>	
-		<a href= "{{url_for('showMovies', genre_id=m.genre_id)}}">Cancel</a>		
-	</div>
+		<a class="button" href= "{{url_for('showMovies', genre_id=m.genre_id)}}">Cancel</a>		
+
 	
 	{% endblock %}

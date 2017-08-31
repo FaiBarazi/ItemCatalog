@@ -11,17 +11,18 @@
         <h1>Main Catalog</h1>
         {% if 'username' not in session %}
         <div class="logButton">
-        <a class='logLink' href="{{url_for('showLogin')}}">Login</a>
+            <a class='logLink' href="{{url_for('showLogin')}}">Login</a>
         </div>
         {% else %}
-        <div class="LogButton">
-          <a class='logLink' href="{{url_for('gdisconnect')}}">Logout</a>
+        <div class="logButton">
+            <a class='logLink' href="{{url_for('gdisconnect')}}">Logout</a>
         </div>
-      {% endif %}
-      
+        {% endif %}
      </div>
-     {% block content %}
-     {% endblock %}
-
+     <div class="mainBody">
+        {% block content %}
+        {% endblock %}
+     </div>
+     
 
 </body>
