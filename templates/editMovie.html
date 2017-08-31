@@ -6,7 +6,7 @@
 			<h3>Movie Name</h3>
 			<input type="text" size="30" name="name" placeholder="{{m.name}}">
 			<h3>Movie Description</h3>
-			<textarea type="text"	size="250" name="description" placeholder="{{m.description}}"></textarea> 
+			<textarea type="text" name="description" placeholder="{{m.description}}"></textarea> 
 			<input type="submit" value="Edit">
 		</form>	
 		<a href= "{{url_for('showMovies', genre_id=m.genre_id)}}">Cancel</a>		
