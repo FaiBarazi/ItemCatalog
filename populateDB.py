@@ -11,7 +11,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 #Horror movies
-horror = Genre(name='Horror Movies')
+horror = Genre(name='Horror')
 session.add(horror)
 session.commit()
 
@@ -24,7 +24,7 @@ session.add(movieItem2)
 session.commit()
 
 #Romance Movies
-romance = Genre(name='Romance Movies')
+romance = Genre(name='Romance')
 session.add(romance)
 session.commit()
 
@@ -37,3 +37,12 @@ movieItem2 = Movie(name='Paris Pieds Nus',description='''Fiona, a Canadian libra
                    genre=romance)
 session.add(movieItem2)
 session.commit()
+
+scifi = Genre(name='Sci Fi')
+session.add(scifi)
+session.commit()
+
+animated = Genre(name='Animated')
+session.add(animated)
+session.commit()
+
