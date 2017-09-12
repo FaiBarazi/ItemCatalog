@@ -19,6 +19,7 @@ from oauth2client.client import FlowExchangeError
 import httplib2
 from flask import make_response
 import requests
+from functools import wraps
 
 app = Flask(__name__)
 # Connect to database
@@ -31,6 +32,17 @@ session = DBSession()
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "ItemCatalog"
+
+# Checking for login
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in login_session:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated_function
 
 # User login/logout setup
 
@@ -230,10 +242,9 @@ def showMovies(genre_id):
 
 
 @app.route('/genre/<int:genre_id>/new', methods=['GET', 'POST'])
+@login_required
 def newMovie(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if request.method == 'POST':
         newmovie = Movie(name=request.form['name'],
                          description=request.form['description'],
@@ -258,9 +269,8 @@ def movieDescription(genre_id, movie_id):
 
 @app.route('/genre/<int:genre_id>/<int:movie_id>/movie/edit',
            methods=['GET', 'POST'])
+@login_required
 def movieEdit(genre_id, movie_id):
-    if 'username' not in login_session:
-        return redirect('/login')
     movie = session.query(Movie).filter_by(id=movie_id).one()
     genre = session.query(Genre).filter_by(id=genre_id).one()
     if movie.user_id != login_session['user_id']:
@@ -282,9 +292,8 @@ def movieEdit(genre_id, movie_id):
 
 @app.route('/genre/<int:genre_id>/<int:movie_id>/delete',
            methods=['GET', 'POST'])
+@login_required
 def movieDelete(genre_id, movie_id):
-    if 'username' not in login_session:
-        return redirect('/login')
     movie = session.query(Movie).filter_by(id=movie_id).one()
     genre = session.query(Genre).filter_by(id=genre_id).one()
     if movie.user_id != login_session['user_id']:
