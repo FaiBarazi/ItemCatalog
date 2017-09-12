@@ -1,5 +1,10 @@
-from flask import Flask, flash, redirect, render_template, \
-    request, url_for, jsonify
+from flask import (Flask,
+                   flash,
+                   redirect,
+                   render_template,
+                   request,
+                   url_for,
+                   jsonify)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Genre, Movie, User
